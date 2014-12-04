@@ -40,56 +40,62 @@ uint32_t Wheel(uint16_t WheelPos);
 void loop() {
 
   // Send a simple pixel chase in...
-  colorChase(strip.Color(127,127,127), 20); // white
-  colorChase(strip.Color(127,0,0), 20);     // red
-  colorChase(strip.Color(127,127,0), 20);   // yellow
-  colorChase(strip.Color(0,127,0), 20);     // green
-  colorChase(strip.Color(0,127,127), 20);   // cyan
-  colorChase(strip.Color(0,0,127), 20);     // blue
-  colorChase(strip.Color(127,0,127), 20);   // magenta
-
-  // Fill the entire strip with...
-  colorWipe(strip.Color(127,0,0), 20);      // red
-  colorWipe(strip.Color(0, 127,0), 20);     // green
-  colorWipe(strip.Color(0,0,127), 20);      // blue
-  colorWipe(strip.Color(0,0,0), 20);        // black
-
-  // Color sparkles
-  dither(strip.Color(0,127,127), 50);       // cyan, slow
-  dither(strip.Color(0,0,0), 15);           // black, fast
-  dither(strip.Color(127,0,127), 50);       // magenta, slow
-  dither(strip.Color(0,0,0), 15);           // black, fast
-  dither(strip.Color(127,127,0), 50);       // yellow, slow
-  dither(strip.Color(0,0,0), 15);           // black, fast
-
-  // Back-and-forth lights
-  scanner(127,0,0, 30);        // red, slow
-  scanner(0,0,127, 15);        // blue, fast
-
-  // Wavy ripple effects
-  wave(strip.Color(127,0,0), 4, 20);        // candy cane
-  wave(strip.Color(0,0,100), 2, 40);        // icy
+//  colorChase(strip.Color(127,127,127), 20); // white
+//  colorChase(strip.Color(127,0,0), 20);     // red
+//  colorChase(strip.Color(127,127,0), 20);   // yellow
+//  colorChase(strip.Color(0,127,0), 20);     // green
+//  colorChase(strip.Color(0,127,127), 20);   // cyan
+//  colorChase(strip.Color(0,0,127), 20);     // blue
+//  colorChase(strip.Color(127,0,127), 20);   // magenta
+//
+//  // Fill the entire strip with...
+//  colorWipe(strip.Color(127,0,0), 20);      // red
+//  colorWipe(strip.Color(0, 127,0), 20);     // green
+//  colorWipe(strip.Color(0,0,127), 20);      // blue
+//  colorWipe(strip.Color(0,0,0), 20);        // black
+//
+//  // Color sparkles
+//  dither(strip.Color(0,127,127), 50);       // cyan, slow
+//  dither(strip.Color(0,0,0), 15);           // black, fast
+//  dither(strip.Color(127,0,127), 50);       // magenta, slow
+//  dither(strip.Color(0,0,0), 15);           // black, fast
+//  dither(strip.Color(127,127,0), 50);       // yellow, slow
+//  dither(strip.Color(0,0,0), 15);           // black, fast
+//
+//  // Back-and-forth lights
+//  scanner(127,0,0, 30);        // red, slow
+//  scanner(0,0,127, 15);        // blue, fast
+//
+//  // Wavy ripple effects
+//  wave(strip.Color(127,0,0), 4, 20);        // candy cane
+//  wave(strip.Color(0,0,100), 2, 40);        // icy
 
   // make a pretty rainbow cycle!
-  rainbowCycle(0);  // make it go through the cycle fairly fast
+  rainbowCycle(5);  // make it go through the cycle fairly fast
 
   // Clear strip data before start of next effect
-  for (int i=0; i < strip.numPixels(); i++) {
-    strip.setPixelColor(i, 0);
-  }
+//  for (int i=0; i < strip.numPixels(); i++) {
+//    strip.setPixelColor(i, 0);
+//  }
 }
 
 // Cycle through the color wheel, equally spaced around the belt
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
-  for (j=0; j < 384 * 5; j++) {     // 5 cycles of all 384 colors in the wheel
+  for (j=0; j < 384 * 20; j++) {     // 5 cycles of all 384 colors in the wheel
     for (i=0; i < strip.numPixels(); i++) {
       // tricky math! we use each pixel as a fraction of the full 384-color
       // wheel (thats the i / strip.numPixels() part)
       // Then add in j which makes the colors go around per pixel
       // the % 384 is to make the wheel cycle around
-      strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels()) + j) % 384));
+      if ( i % 2 == 0 ) {
+        strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels()) + j) % 384));
+      } else {
+        strip.setPixelColor(
+          strip.numPixels() - i,  Wheel(((i * 384 / strip.numPixels()) + j) % 384)
+        );
+      }
     }
     strip.show();   // write all the pixels out
     delay(wait);
